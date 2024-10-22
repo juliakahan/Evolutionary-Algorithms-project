@@ -9,3 +9,12 @@ Project milestones:
 * Classification of problems based on unsupervised approach
 * Benchmarking a chosen set of a few algorithms on every problem
 * Comparing algorithmic leaderboards for problem classes for both approaches
+
+
+Resources:
+
+* https://arxiv.org/abs/1708.05258
+* https://pypi.org/project/pflacco/
+* https://numbbo.github.io/coco/testsuites/bbob
+* https://pypi.org/project/cma/
+* https://pymoo.org/
