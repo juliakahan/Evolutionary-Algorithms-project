@@ -6,71 +6,26 @@ features = []
 dimension = 20
 n_samples = 100 * dimension
 
-function_classes = {
-    1: "separable - separable",
-    2: "separable - separable",
-    11: "separable - separable",
-    3: "separable - moderate",
-    4: "separable - moderate",
-    12: "separable - moderate",
-    13: "separable - moderate",
-    5: "separable - ill-conditioned",
-    6: "separable - ill-conditioned",
-    14: "separable - ill-conditioned",
-    15: "separable - ill-conditioned",
-    7: "separable - multi-modal",
-    8: "separable - multi-modal",
-    16: "separable - multi-modal",
-    17: "separable - multi-modal",
-    9: "separable - weakly-structured",
-    10: "separable - weakly-structured",
-    18: "separable - weakly-structured",
-    19: "separable - weakly-structured",
-    20: "moderate - moderate",
-    21: "moderate - moderate",
-    28: "moderate - moderate",
-    22: "moderate - ill-conditioned",
-    23: "moderate - ill-conditioned",
-    29: "moderate - ill-conditioned",
-    30: "moderate - ill-conditioned",
-    24: "moderate - multi-modal",
-    25: "moderate - multi-modal",
-    31: "moderate - multi-modal",
-    32: "moderate - multi-modal",
-    26: "moderate - weakly-structured",
-    27: "moderate - weakly-structured",
-    33: "moderate - weakly-structured",
-    34: "moderate - weakly-structured",
-    35: "ill-conditioned - ill-conditioned",
-    36: "ill-conditioned - ill-conditioned",
-    41: "ill-conditioned - ill-conditioned",
-    37: "ill-conditioned - multi-modal",
-    38: "ill-conditioned - multi-modal",
-    42: "ill-conditioned - multi-modal",
-    43: "ill-conditioned - multi-modal",
-    39: "ill-conditioned - weakly-structured",
-    40: "ill-conditioned - weakly-structured",
-    44: "ill-conditioned - weakly-structured",
-    45: "ill-conditioned - weakly-structured",
-    46: "multi-modal - multi-modal",
-    47: "multi-modal - multi-modal",
-    50: "multi-modal - multi-modal",
-    48: "multi-modal - weakly structured",
-    49: "multi-modal - weakly structured",
-    51: "multi-modal - weakly structured",
-    52: "multi-modal - weakly structured",
-    53: "weakly structured - weakly structured",
-    54: "weakly structured - weakly structured",
-    55: "weakly structured - weakly structured"
-}
+# Function classes taken from here: https://numbbo.github.io/coco/testsuites/bbob
+# 1 Separable Functions
+# 2 Functions with low or moderate conditioning
+# 3 Functions with high conditioning and unimodal
+# 4 Multi-modal functions with adequate global structure
+# 5 Multi-modal functions with weak global structure
+
+function_classes = [1, 1, 1, 1, 1,
+                    2, 2, 2, 2,
+                    3, 3, 3, 3, 3,
+                    4, 4, 4, 4, 4,
+                    5, 5, 5, 5, 5]
 
 # Get all 24 single-objective noiseless BBOB function in dimension 20 the first instance.
-suite = cocoex.Suite("bbob", "instances:1-100", f"function_indices:1-55 dimensions:{dimension}")
+suite = cocoex.Suite("bbob", "instances:1-50", f"function_indices:1-24 dimensions:{dimension}")
 for problem in suite:
     dim = problem.dimension
     fid = problem.id_function
     iid = problem.id_instance
-    function_class = function_classes[fid]
+    function_class = function_classes[fid-1]
 
     # Create sample
     X = create_initial_sample(dim, n = n_samples, lower_bound = -5, upper_bound = 5)
@@ -90,8 +45,8 @@ for problem in suite:
     nbc = nbc['nbc.nb_fitness.cor']
 
     # Store results in pandas dataframe
-    data = pd.DataFrame({'function_class': function_class,'int': int, 'lr2': lr2, 'max': max, 'eps_ratio': eps_ratio, 'disp': disp, 'nbc': nbc}, index = [0])
+    data = pd.DataFrame({'function_class': function_class,'function_id': fid, 'int': int, 'lr2': lr2, 'max': max, 'eps_ratio': eps_ratio, 'disp': disp, 'nbc': nbc}, index = [0])
     features.append(data)
 
 features = pd.concat(features).reset_index(drop = True)
-features.to_csv('ela_features_with_classe_2.csv')
+features.to_csv('ela_features_with_classes.csv')
